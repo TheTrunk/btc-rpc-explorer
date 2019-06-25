@@ -2,7 +2,6 @@ var redis = require("redis");
 var bluebird = require("bluebird");
 
 var config = require("./config.js");
-var utils = require("./utils.js");
 
 var redisClient = null;
 if (config.redisUrl) {
@@ -32,7 +31,7 @@ var redisCache = {
 				resolve(JSON.parse(result));
 
 			}).catch(function(err) {
-				utils.logError("328rhwefghsdgsdss", err);
+				console.log(`Error 328rhwefghsdgsdss: ${err}`);
 
 				reject(err);
 			});

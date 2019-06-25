@@ -124,14 +124,13 @@ module.exports = {
 		"walletpassphrasechange",
 	],
 
-	addressApi:process.env.BTCEXP_ADDRESS_API,
 	electrumXServers:electrumXServers,
 
 	redisUrl:process.env.BTCEXP_REDIS_URL,
 
 	site: {
 		blockTxPageSize:20,
-		addressTxPageSize:10,
+		addressTxPageSize:20,
 		txMaxInput:15,
 		browseBlocksPageSize:20,
 		addressPage:{
@@ -144,9 +143,8 @@ module.exports = {
 					title:"Related Sites",
 					links:[
 						{name: "Bitcoin Explorer", url:"https://btc.chaintools.io", imgUrl:"/img/logo/btc.svg"},
-						{name: "LND Admin", url:"https://lnd-admin.chaintools.io", imgUrl:"/img/logo/lnd-admin.png"},
-						//{name: "Litecoin Explorer", url:"https://ltc.chaintools.io", imgUrl:"/img/logo/ltc.svg"},
-						//{name: "Lightning Explorer", url:"https://lightning.chaintools.io", imgUrl:"/img/logo/lightning.svg"},
+						{name: "Litecoin Explorer", url:"https://ltc.chaintools.io", imgUrl:"/img/logo/ltc.svg"},
+						{name: "Lightning Explorer", url:"https://lightning.chaintools.io", imgUrl:"/img/logo/lightning.svg"},
 					]
 				}
 			]

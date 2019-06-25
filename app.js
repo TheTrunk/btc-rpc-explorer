@@ -13,14 +13,6 @@ configPaths.filter(fs.existsSync).forEach(path => {
 	dotenv.config({ path });
 });
 
-// debug module is already loaded by the time we do dotenv.config
-// so refresh the status of DEBUG env var
-var debug = require("debug");
-debug.enable(process.env.DEBUG);
-
-var debugLog = debug("btcexp:app");
-var debugPerfLog = debug("btcexp:actionPerformace");
-
 var express = require('express');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
@@ -40,8 +32,7 @@ var coreApi = require("./app/api/coreApi.js");
 var coins = require("./app/coins.js");
 var request = require("request");
 var qrcode = require("qrcode");
-var addressApi = require("./app/api/addressApi.js");
-var electrumAddressApi = require("./app/api/electrumAddressApi.js");
+var electrumApi = require("./app/api/electrumApi.js");
 var Influx = require("influx");
 var coreApi = require("./app/api/coreApi.js");
 var auth = require('./app/auth.js');
@@ -71,7 +62,7 @@ if (process.env.BTCEXP_BASIC_AUTH_PASSWORD) {
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
-//app.use(logger('dev'));
+app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -84,7 +75,7 @@ app.use(session({
 app.use(express.static(path.join(__dirname, 'public')));
 
 process.on("unhandledRejection", (reason, p) => {
-	debugLog("Unhandled Rejection at: Promise", p, "reason:", reason, "stack:", (reason != null ? reason.stack : "null"));
+	console.log("Unhandled Rejection at: Promise", p, "reason:", reason, "stack:", (reason != null ? reason.stack : "null"));
 
 	if (global.influxdb) {
 		var points = [];
@@ -95,7 +86,7 @@ process.on("unhandledRejection", (reason, p) => {
 		});
 
 		global.influxdb.writePoints(points).catch(err => {
-			debugLog(`Error saving data to InfluxDB: ${err.stack}`);
+			console.error(`Error saving data to InfluxDB: ${err.stack}`);
 		});
 	}
 });
@@ -115,9 +106,9 @@ function logNetworkStats() {
 			var miningInfo = promiseResults[1];
 			var blockchainInfo = promiseResults[2];
 
-			//debugLog("mempoolInfo: " + JSON.stringify(mempoolInfo));
-			//debugLog("miningInfo: " + JSON.stringify(miningInfo));
-			//debugLog("blockchainInfo: " + JSON.stringify(blockchainInfo));
+			//console.log("mempoolInfo: " + JSON.stringify(mempoolInfo));
+			//console.log("miningInfo: " + JSON.stringify(miningInfo));
+			//console.log("blockchainInfo: " + JSON.stringify(blockchainInfo));
 
 			var points = [];
 
@@ -127,8 +118,8 @@ function logNetworkStats() {
 					if (mempoolMapping[key]) {
 						points.push({measurement:`${global.coinConfig.name.toLowerCase()}.mempool.${mempoolMapping[key]}`, fields:{value:mempoolInfo[key]}});
 					}
-				} catch (err) {
-					utils.logError("3ourhewe", err, {key:key, desc:"Error mapping mempool info"});
+				} catch(err) {
+					console.error(`Error mapping mempool info for key '${key}': ${err.stack}`);
 				}
 			}
 
@@ -148,8 +139,8 @@ function logNetworkStats() {
 					if (miningMapping[key]) {
 						points.push({measurement:`${global.coinConfig.name.toLowerCase()}.mining.${miningMapping[key].name}`, fields:{value:miningMapping[key].transform(miningInfo[key])}});
 					}
-				} catch (err) {
-					utils.logError("weoufbebfde4", err, {key:key, desc:"Error mapping mining info"});
+				} catch(err) {
+					console.error(`Error mapping mining info for key '${key}': ${err.stack}`);
 				}
 			}
 
@@ -159,18 +150,18 @@ function logNetworkStats() {
 					if (blockchainMapping[key]) {
 						points.push({measurement:`${global.coinConfig.name.toLowerCase()}.blockchain.${blockchainMapping[key]}`, fields:{value:blockchainInfo[key]}});
 					}
-				} catch (err) {
-					utils.logError("3heuuh4wwds", err, {key:key, desc:"Error mapping blockchain info"});
+				} catch(err) {
+					console.error(`Error mapping blockchain info for key '${key}': ${err.stack}`);
 				}
 			}
 
-			//debugLog("Points to send to InfluxDB: " + JSON.stringify(points, null, 4));
+			//console.log("Points to send to InfluxDB: " + JSON.stringify(points, null, 4));
 
 			global.influxdb.writePoints(points).catch(err => {
-				utils.logError("w083rhewhee", err, {desc:"Error saving data to InfluxDB"});
+				console.error(`Error saving data to InfluxDB: ${err.stack}`);
 			});
 		}).catch(err => {
-			utils.logError("u2h3rfsd", err);
+			console.log(`Error logging network stats: ${err}`);
 		});
 	}
 }
@@ -222,16 +213,16 @@ function logBlockStats() {
 						points.push({measurement:`${global.coinConfig.name.toLowerCase()}.blocks.${key}`, fields:{value:blockInfo[key]}, timestamp:timestamp});
 					}
 
-					//debugLog("block: " + block.height + ": " + JSON.stringify(blockInfo, null, 4));
-					//debugLog("points: " + JSON.stringify(points, null, 4));
+					//console.log("block: " + block.height + ": " + JSON.stringify(blockInfo, null, 4));
+					//console.log("points: " + JSON.stringify(points, null, 4));
 				}
 
 				global.influxdb.writePoints(points).catch(err => {
-					utils.logError("3ru032hfudge", err, {desc:"Error saving data to InfluxDB"});
+					console.error(`Error saving data to InfluxDB: ${err.stack}`);
 				});
 			});
 		}).catch(function(err) {
-			utils.logError("23uhsdsgde", err);
+			console.log(`Error logging block stats: ${err}`);
 		});
 	}
 }
@@ -243,9 +234,7 @@ function loadMiningPoolConfigs() {
 
 	fs.readdir(miningPoolsConfigDir, function(err, files) {
 		if (err) {
-			utils.logError("3ufhwehe", err, {configDir:miningPoolsConfigDir, desc:"Unable to scan directory"});
-
-			return;
+			return console.log(`Unable to scan directory: ${err}`);
 		}
 
 		files.forEach(function(file) {
@@ -281,7 +270,7 @@ function getSourcecodeProjectMetadata() {
 			global.sourcecodeProjectMetadata = responseBody;
 
 		} else {
-			utils.logError("3208fh3ew7eghfg", {error:error, response:response, body:body});
+			console.log(`Error 3208fh3ew7eghfg: ${error}, StatusCode: ${response.statusCode}, Response: ${JSON.stringify(response)}`);
 		}
 	});
 }
@@ -292,29 +281,27 @@ app.runOnStartup = function() {
 	global.coinConfig = coins[config.coin];
 	global.coinConfigs = coins;
 
-	debugLog(`Running RPC Explorer for ${global.coinConfig.name}`);
+	console.log(`Running RPC Explorer for ${global.coinConfig.name}`);
 
 	var rpcCred = config.credentials.rpc;
-	debugLog(`Connecting via RPC to node at ${rpcCred.host}:${rpcCred.port}`);
+	console.log(`Connecting via RPC to node at ${rpcCred.host}:${rpcCred.port}`);
 
-	var rpcClientProperties = {
+	global.client = new bitcoinCore({
 		host: rpcCred.host,
 		port: rpcCred.port,
 		username: rpcCred.username,
 		password: rpcCred.password,
-		timeout: rpcCred.timeout
-	};
-
-	global.client = new bitcoinCore(rpcClientProperties);
+		timeout: 5000
+	});
 
 	if (config.credentials.influxdb.active) {
 		global.influxdb = new Influx.InfluxDB(config.credentials.influxdb);
 
-		debugLog(`Connected to InfluxDB: ${config.credentials.influxdb.host}:${config.credentials.influxdb.port}/${config.credentials.influxdb.database}`);
+		console.log(`Connected to InfluxDB: ${config.credentials.influxdb.host}:${config.credentials.influxdb.port}/${config.credentials.influxdb.database}`);
 	}
 
 	coreApi.getNetworkInfo().then(function(getnetworkinfo) {
-		debugLog(`Connected via RPC to node. Basic info: version=${getnetworkinfo.version}, subversion=${getnetworkinfo.subversion}, protocolversion=${getnetworkinfo.protocolversion}, services=${getnetworkinfo.localservices}`);
+		console.log(`Connected via RPC to node. Basic info: version=${getnetworkinfo.version}, subversion=${getnetworkinfo.subversion}, protocolversion=${getnetworkinfo.protocolversion}, services=${getnetworkinfo.localservices}`);
 
 		if (global.influxdb != null) {
 			logNetworkStats();
@@ -324,7 +311,7 @@ app.runOnStartup = function() {
 			setInterval(logBlockStats, 5 * 60000);
 		}
 	}).catch(function(err) {
-		utils.logError("32ugegdfsde", err);
+		console.log("Error 923grf20fge: " + err + ", error json: " + JSON.stringify(err));
 	});
 
 	if (config.donations.addresses) {
@@ -363,35 +350,23 @@ app.runOnStartup = function() {
 		});
 	}
 
-	if (config.addressApi) {
-		var supportedAddressApis = addressApi.getSupportedAddressApis();
-		if (!supportedAddressApis.includes(config.addressApi)) {
-			utils.logError("32907ghsd0ge", `Unrecognized value for BTCEXP_ADDRESS_API: '${config.addressApi}'. Valid options are: ${supportedAddressApis}`);
-		}
+	if (config.electrumXServers && config.electrumXServers.length > 0) {
+		electrumApi.connectToServers().then(function() {
+			console.log("Live with ElectrumX API.");
 
-		if (config.addressApi == "electrumx") {
-			if (config.electrumXServers && config.electrumXServers.length > 0) {
-				electrumAddressApi.connectToServers().then(function() {
-					global.electrumAddressApi = electrumAddressApi;
-					
-				}).catch(function(err) {
-					utils.logError("31207ugf4e0fed", err, {electrumXServers:config.electrumXServers});
-				});
-			} else {
-				utils.logError("327hs0gde", "You must set the 'BTCEXP_ELECTRUMX_SERVERS' environment variable when BTCEXP_ADDRESS_API=electrumx.");
-			}
-		}
+			global.electrumApi = electrumApi;
+			
+		}).catch(function(err) {
+			console.log("Error 31207ugf4e0fed: " + err + ", while initializing ElectrumX API");
+		});
 	}
-
 
 	loadMiningPoolConfigs();
 
 	if (global.sourcecodeVersion == null && fs.existsSync('.git')) {
 		simpleGit(".").log(["-n 1"], function(err, log) {
 			if (err) {
-				utils.logError("3fehge9ee", err, {desc:"Error accessing git repo"});
-
-				return;
+				return console.error(`Error accessing git repo: ${err}`);
 			}
 			
 			global.sourcecodeVersion = log.all[0].hash.substring(0, 10);
@@ -451,8 +426,6 @@ app.use(function(req, res, next) {
 	res.locals.genesisBlockHash = coreApi.getGenesisBlockHash();
 	res.locals.genesisCoinbaseTransactionId = coreApi.getGenesisCoinbaseTransactionId();
 
-	res.locals.pageErrors = [];
-
 
 	// currency format type
 	if (!req.session.currencyFormatType) {
@@ -487,6 +460,18 @@ app.use(function(req, res, next) {
 
 		} else {
 			req.session.hideHomepageBanner = "false";
+		}
+	}
+
+	// electrum trust warnings on address pages
+	if (!req.session.hideElectrumTrustWarnings) {
+		var cookieValue = req.cookies['user-setting-hideElectrumTrustWarnings'];
+
+		if (cookieValue) {
+			req.session.hideElectrumTrustWarnings = cookieValue;
+
+		} else {
+			req.session.hideElectrumTrustWarnings = "false";
 		}
 	}
 
@@ -536,8 +521,6 @@ app.use(function(req, res, next) {
 	var time = Date.now() - req.startTime;
 	var memdiff = process.memoryUsage().heapUsed - req.startMem;
 
-	debugPerfLog("Finished action '%s' in %d ms", req.path, time);
-
 	if (global.influxdb) {
 		var points = [];
 		points.push({
@@ -547,7 +530,7 @@ app.use(function(req, res, next) {
 		});
 
 		global.influxdb.writePoints(points).catch(err => {
-			utils.logError("3rew08uhfeghd", err, {desc:"Error saving data to InfluxDB"});
+			console.error(`Error saving data to InfluxDB: ${err.stack}`);
 		});
 	}
 });

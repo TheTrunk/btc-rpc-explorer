@@ -10,7 +10,7 @@ html(lang="en")
 
 
 		if (session.uiTheme && session.uiTheme == "dark")
-			link(rel="stylesheet", href="/css/bootstrap-dark.css", integrity="")
+			link(rel="stylesheet", href="/css/bootstrap-dark-2.css", integrity="")
 			link(rel="stylesheet", href="/css/dark-touchups.css", integrity="")
 				
 		else
@@ -48,7 +48,7 @@ html(lang="en")
 								li(class="nav-item dropdown")
 									a(class="nav-link dropdown-toggle", href="javascript:void(0)", role="button", data-toggle="dropdown", aria-haspopup="true", aria-expanded="false") 
 										span  Tools
-									div(class="dropdown-menu shadow", aria-label="Tools Items")
+									div(class="dropdown-menu", aria-label="Tools Items")
 										each item in config.siteTools
 											a(class="dropdown-item", href=item.url)
 												i(class=item.fontawesome, style="width: 20px; margin-right: 10px;")
@@ -59,7 +59,7 @@ html(lang="en")
 									li(class="nav-item dropdown")
 										a(class="nav-link dropdown-toggle", href="javascript:void(0)", role="button", data-toggle="dropdown", aria-haspopup="true", aria-expanded="false") 
 											span  #{dropdown.title}
-										div(class="dropdown-menu shadow", aria-label=(dropdown.title + " Items"))
+										div(class="dropdown-menu", aria-label=(dropdown.title + " Items"))
 											each dropdownLink in dropdown.links
 												a(class="dropdown-item", href=dropdownLink.url)
 													if (dropdownLink.imgUrl)
@@ -79,11 +79,11 @@ html(lang="en")
 							li(class="nav-item dropdown")
 								a(class="nav-link dropdown-toggle", href="javascript:void(0)", id="navbarDropdown", role="button", data-toggle="dropdown", aria-haspopup="true", aria-expanded="false") 
 									i(class="fas fa-cog mr-1") 
-								div(class="dropdown-menu dropdown-menu-right shadow", aria-labelledby="navbarDropdown")
+								div(class="dropdown-menu", aria-labelledby="navbarDropdown")
 									if (coinConfig.currencyUnits)
 										span(class="dropdown-header") Currency Units
 										each item in coinConfig.currencyUnits
-											if (item.type == "native" || (config.queryExchangeRates && !config.privacyMode))
+											if (item.type == "native" || config.queryExchangeRates)
 												a(class="dropdown-item", href=("/changeSetting?name=currencyFormatType&value=" + item.values[0]))
 													each valueName in item.values
 														if (currencyFormatType == valueName)
@@ -114,14 +114,6 @@ html(lang="en")
 
 		div(class="pb-4 pt-3 pt-md-4", style=("background-color: " + bodyBgColor))
 			div(class="container px-2 px-sm-3")
-				if (pageErrors && pageErrors.length > 0)
-					include includes/page-errors-modal.pug
-
-					div.float-right
-						div.alert.alert-danger.py-1.px-3.mb-n2.mt-n1.font-weight-bold(title=`This page encountered ${pageErrors.length.toLocaleString()} error(s). Click for details.` data-toggle="tooltip")
-							a.text-danger(href="javascript:void(0)" data-toggle="modal" data-target="#pageErrorsModal") Errors
-							span.badge.badge-danger.ml-2 #{pageErrors.length.toLocaleString()}
-
 				if (userMessage)
 					div(class="alert", class=(userMessageType ? ("alert-"  + userMessageType) : "alert-warning"), role="alert")
 						span !{userMessage}
@@ -130,7 +122,7 @@ html(lang="en")
 
 				div(style="margin-bottom: 30px;")
 
-				if (config.demoSite && !crawlerBot)
+				if (config.demoSite)
 					include ./includes/donation-modal.pug
 
 		footer(class="footer border-top border-primary bg-dark pt-3 pb-1 px-3 text-white", style="border-width: 5px !important;")
@@ -175,8 +167,8 @@ html(lang="en")
 											a(href=coinConfigs[demoSiteCoin].demoSiteUrl, class="mr-2", title=coinConfigs[demoSiteCoin].siteTitle)
 												img(src=("/img/logo/" + demoSiteCoin.toLowerCase() + ".svg"), alt=demoSiteCoin.toLowerCase())
 
-										a(href="https://lnd-admin.chaintools.io", class="mr-2", title="LND Admin")
-											img(src=("/img/logo/lnd-admin.png"), style="width: 32px; height: 32px;", alt="LND Admin")
+										a(href="https://lightning.chaintools.io", class="mr-2", title="Lightning Explorer")
+											img(src=("/img/logo/lightning.svg"), style="width: 32px; height: 32px;", alt="lightning")
 
 					div(class="col-md-7 text-md-right")
 						dl

@@ -1,18 +1,15 @@
 - var currencyFormatInfo = utils.getCurrencyFormatInfo(currencyFormatType);
 
 if (currencyValue > 0)
-	- var parts = utils.formatCurrencyAmount(currencyValue, currencyFormatType).split(" ");
-
-	span.monospace #{parts[0]}
+	span(class="monospace") #{utils.formatCurrencyAmount(currencyValue, currencyFormatType)}
 		if (currencyFormatInfo.type == "native")
 			if (global.exchangeRates)
-				small.border-dotted.ml-1(data-toggle="tooltip", title=utils.formatExchangedCurrency(currencyValue, "usd")) #{parts[1]}
-
-			else
-				small.ml-1 #{parts[1]}
-					
+				span  
+				span(data-toggle="tooltip", title=utils.formatExchangedCurrency(currencyValue, "usd"))
+					i(class="fas fa-exchange-alt")
 		else if (currencyFormatInfo.type == "exchanged")
-			small.border-dotted.ml-1(data-toggle="tooltip", title=utils.formatCurrencyAmount(currencyValue, coinConfig.defaultCurrencyUnit.name)) #{parts[1]}
-			
+			span  
+			span(data-toggle="tooltip", title=utils.formatCurrencyAmount(currencyValue, coinConfig.defaultCurrencyUnit.name))
+				i(class="fas fa-exchange-alt")
 else
-	span.monospace 0
+	span(class="monospace") 0
