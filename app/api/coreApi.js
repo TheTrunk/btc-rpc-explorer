@@ -1,4 +1,6 @@
-var debug = require("debug")("btcexp:coreApi");
+var debug = require("debug");
+
+var debugLog = debug("btcexp:core");
 
 var LRU = require("lru-cache");
 var fs = require('fs');
@@ -14,7 +16,7 @@ var rpcApi = require("./rpcApi.js");
 
 
 function onCacheEvent(cacheType, hitOrMiss, cacheKey) {
-	//console.log(`cache.${cacheType}.${hitOrMiss}: ${cacheKey}`);
+	//debugLog(`cache.${cacheType}.${hitOrMiss}: ${cacheKey}`);
 }
 
 function createMemoryLruCache(cacheObj) {
@@ -81,7 +83,7 @@ function getGenesisCoinbaseTransactionId() {
 
 
 function tryCacheThenRpcApi(cache, cacheKey, cacheMaxAge, rpcApiFunction, cacheConditionFunction) {
-	//debug("tryCache: " + cacheKey + ", " + cacheMaxAge);
+	//debugLog("tryCache: " + cacheKey + ", " + cacheMaxAge);
 	if (cacheConditionFunction == null) {
 		cacheConditionFunction = function(obj) {
 			return true;
@@ -115,7 +117,7 @@ function tryCacheThenRpcApi(cache, cacheKey, cacheMaxAge, rpcApiFunction, cacheC
 			finallyFunc();
 			
 		}).catch(function(err) {
-			console.log(`Error nds9fc2eg621tf3: key=${cacheKey}, err=${err}`);
+			utils.logError("nds9fc2eg621tf3", err, {cacheKey:cacheKey});
 
 			finallyFunc();
 		});
@@ -123,6 +125,10 @@ function tryCacheThenRpcApi(cache, cacheKey, cacheMaxAge, rpcApiFunction, cacheC
 }
 
 function shouldCacheTransaction(tx) {
+	if (!tx.confirmations) {
+		return false;
+	}
+	
 	if (tx.confirmations < 1) {
 		return false;
 	}
@@ -537,10 +543,10 @@ function getMempoolStats() {
 				summary["satoshiPerByteBucketTotalFees"].push(summary["satoshiPerByteBuckets"][i]["totalFees"]);
 			}
 
-			/*debug(JSON.stringify(ageBuckets));
-			debug(JSON.stringify(ageBucketLabels));
-			debug(JSON.stringify(sizeBuckets));
-			debug(JSON.stringify(sizeBucketLabels));*/
+			/*debugLog(JSON.stringify(ageBuckets));
+			debugLog(JSON.stringify(ageBucketLabels));
+			debugLog(JSON.stringify(sizeBuckets));
+			debugLog(JSON.stringify(sizeBucketLabels));*/
 
 			resolve(summary);
 
@@ -586,7 +592,13 @@ function getBlocksByHash(blockHashes) {
 		}
 
 		Promise.all(promises).then(function(results) {
-			resolve(results);
+			var result = {};
+
+			results.forEach(function(item) {
+				result[item.hash] = item;
+			});
+
+			resolve(result);
 
 		}).catch(function(err) {
 			reject(err);
@@ -874,6 +886,7 @@ module.exports = {
 	getBlockByHeight: getBlockByHeight,
 	getBlocksByHeight: getBlocksByHeight,
 	getBlockByHash: getBlockByHash,
+	getBlocksByHash: getBlocksByHash,
 	getBlockByHashWithTransactions: getBlockByHashWithTransactions,
 	getRawTransaction: getRawTransaction,
 	getRawTransactions: getRawTransactions,
