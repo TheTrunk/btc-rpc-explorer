@@ -105,7 +105,7 @@ block content
 							div(class="summary-table-content monospace")
 								if (result.getrawtransaction.vsize != result.getrawtransaction.size)
 									span #{result.getrawtransaction.vsize.toLocaleString()} 
-									span(title="Virtual Bytes", data-toggle="tooltip") vB
+									span.border-dotted(title="Virtual bytes", data-toggle="tooltip") vB
 									br
 									span(class="text-muted") (#{result.getrawtransaction.size.toLocaleString()} B)
 
@@ -149,15 +149,13 @@ block content
 									include includes/value-display.pug
 
 							- var blockRewardMax = coinConfig.blockRewardFunction(result.getblock.height);
-							if (totalOutputValue < blockRewardMax)
+							if (parseFloat(totalOutputValue) < parseFloat(blockRewardMax))
 								div(class="row")
-									div(class="summary-table-label") Fees Destroyed
-									div(class="summary-table-content monospace")
+									div(class="summary-table-label")
+										span.border-dotted(data-toggle="tooltip" title="The miner of this transaction's block failed to collect this value. As a result, it is lost.") Fees Destroyed
+									div(class="summary-table-content monospace text-danger")
 										- var currencyValue = new Decimal(blockRewardMax).minus(totalOutputValue);
 										include includes/value-display.pug
-
-										a(class="ml-2", data-toggle="tooltip", title="The miner of this transaction's block failed to collect this value. As a result, it is lost.")
-											i(class="fas fa-info-circle")
 
 							if (minerInfo)
 								- var minerInfo = utils.getMinerFromCoinbaseTx(result.getrawtransaction);
@@ -193,7 +191,8 @@ block content
 									div(class="summary-table-label") Fee Rate
 									div(class="summary-table-content monospace")
 										if (result.getrawtransaction.vsize != result.getrawtransaction.size)
-											span #{utils.addThousandsSeparators(new DecimalRounded(totalInputValue).minus(totalOutputValue).dividedBy(result.getrawtransaction.vsize).times(100000000))} sat/vB
+											span #{utils.addThousandsSeparators(new DecimalRounded(totalInputValue).minus(totalOutputValue).dividedBy(result.getrawtransaction.vsize).times(100000000))} sat/
+											span.border-dotted(title="Virtual bytes" data-toggle="tooltip") vB
 											br
 
 										span(class="text-muted") (#{utils.addThousandsSeparators(new DecimalRounded(totalInputValue).minus(totalOutputValue).dividedBy(result.getrawtransaction.size).times(100000000))} sat/B)
