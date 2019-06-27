@@ -3,18 +3,18 @@ Decimal8 = Decimal.clone({ precision:8, rounding:8 });
 
 var currencyUnits = [
 	{
-		type:"DOGE",
-		name:"DOGE",
+		type:"DGB",
+		name:"DGB",
 		multiplier:1,
 		default:true,
-		values:["", "doge", "DOGE"],
+		values:["", "dgb", "DGB"],
 		decimalPlaces:8
 	},
 	{
 		type:"native",
-		name:"mDOGE",
+		name:"mDGB",
 		multiplier:1000,
-		values:["mdoge"],
+		values:["mdgb"],
 		decimalPlaces:5
 	},
 	{
