@@ -3,8 +3,8 @@ Decimal8 = Decimal.clone({ precision:8, rounding:8 });
 
 var currencyUnits = [
 	{
-		type:"BZX",
-		name:"BTC",
+		type:"native",
+		name:"BZX",
 		multiplier:1,
 		default:true,
 		values:["", "bzx", "BZX"],

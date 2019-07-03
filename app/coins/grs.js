@@ -3,7 +3,7 @@ Decimal8 = Decimal.clone({ precision:8, rounding:8 });
 
 var currencyUnits = [
 	{
-		type:"GRS",
+		type:"native",
 		name:"GRS",
 		multiplier:1,
 		default:true,
