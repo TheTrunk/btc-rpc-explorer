@@ -67,26 +67,32 @@ module.exports = {
 	baseCurrencyUnit:currencyUnits[3],
 	defaultCurrencyUnit:currencyUnits[0],
 	feeSatoshiPerByteBucketMaxima: [5, 10, 25, 50, 100, 150, 200, 250],
-	genesisBlockHash: "1a91e3dace36e2be3bf030a65679fe821aa1d6ef92e7c9902eb318182c355691",
-	genesisCoinbaseTransactionId: "5b2a3f53f605d62c53e62932dac6925e3d74afa5a4b459745c36d42d0ed26a69",
-	genesisCoinbaseTransaction: {
-		"txid":"5b2a3f53f605d62c53e62932dac6925e3d74afa5a4b459745c36d42d0ed26a69",
-		"hash":"5b2a3f53f605d62c53e62932dac6925e3d74afa5a4b459745c36d42d0ed26a69",
-		"blockhash":"1a91e3dace36e2be3bf030a65679fe821aa1d6ef92e7c9902eb318182c355691",
-		"version":1,
-		"locktime":0,
-		"size":0,
-		"vsize":0,
-		"time":0,
-		"blocktime":0,
-		"vin":[
-			{
-			}
-		],
-		"vout":[
-			{
-			}
-		]
+	genesisBlockHashesByNetwork:{
+		"main":    "1a91e3dace36e2be3bf030a65679fe821aa1d6ef92e7c9902eb318182c355691"
+	},
+	genesisCoinbaseTransactionIdsByNetwork: {
+		"main":    "5b2a3f53f605d62c53e62932dac6925e3d74afa5a4b459745c36d42d0ed26a69"
+	},
+	genesisCoinbaseTransactionsByNetwork:{
+		"main": {
+			"txid":"5b2a3f53f605d62c53e62932dac6925e3d74afa5a4b459745c36d42d0ed26a69",
+			"hash":"5b2a3f53f605d62c53e62932dac6925e3d74afa5a4b459745c36d42d0ed26a69",
+			"blockhash":"1a91e3dace36e2be3bf030a65679fe821aa1d6ef92e7c9902eb318182c355691",
+			"version":1,
+			"locktime":0,
+			"size":0,
+			"vsize":0,
+			"time":0,
+			"blocktime":0,
+			"vin":[
+				{
+				}
+			],
+			"vout":[
+				{
+				}
+			]
+		}
 	},
 	historicalData: [
 	],

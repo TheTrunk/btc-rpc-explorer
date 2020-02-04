@@ -67,41 +67,47 @@ module.exports = {
 	baseCurrencyUnit:currencyUnits[3],
 	defaultCurrencyUnit:currencyUnits[0],
 	feeSatoshiPerByteBucketMaxima: [5, 10, 25, 50, 100, 150, 200, 250],
-	genesisBlockHash: "322bad477efb4b33fa4b1f0b2861eaf543c61068da9898a95062fdb02ada486f",
-	genesisCoinbaseTransactionId: "31f49b23f8a1185f85a6a6972446e72a86d50ca0e3b3ffe217d0c2fea30473db",
-	genesisCoinbaseTransaction: {
-		"txid":"31f49b23f8a1185f85a6a6972446e72a86d50ca0e3b3ffe217d0c2fea30473db",
-		"hash":"31f49b23f8a1185f85a6a6972446e72a86d50ca0e3b3ffe217d0c2fea30473db",
-		"blockhash":"322bad477efb4b33fa4b1f0b2861eaf543c61068da9898a95062fdb02ada486f",
-		"version":2,
-		"locktime":0,
-		"size":168,
-		"vsize":168,
-		"time":1485785935,
-		"blocktime":1485785935,
-		"vin":[
-			{
-				"prev_out":{
-					"hash":"0000000000000000000000000000000000000000000000000000000000000000",
-					"n":4294967295
-				},
-				"coinbase":"04ffff001d0104404e592054696d65732030352f4f63742f32303131205374657665204a6f62732c204170706c65e280997320566973696f6e6172792c2044696573206174203536"
-			}
-		],
-		"vout":[
-			{
-				"value":"50.00000000",
-				"n":0,
-				"scriptPubKey":{
-					"hex":"040184710fa689ad5023690c80f3a49c8f13f8d45b8c857fbcbc8bc4a8e4d3eb4b10f4d4604fa08dce601aaf0f470216fe1b51850b4acf21b179c45070ac7b03a9 OP_CHECKSIG",
-					"type":"pubkey",
-					"reqSigs":1,
-					"addresses":[
-						"Ler4HNAEfwYhBmGXcFP2Po1NpRUEiK8km2"
-					]
+	genesisBlockHashesByNetwork:{
+		"main":    "322bad477efb4b33fa4b1f0b2861eaf543c61068da9898a95062fdb02ada486f"
+	},
+	genesisCoinbaseTransactionIdsByNetwork: {
+		"main":    "31f49b23f8a1185f85a6a6972446e72a86d50ca0e3b3ffe217d0c2fea30473db"
+	},
+	genesisCoinbaseTransactionsByNetwork:{
+		"main": {
+			"txid":"31f49b23f8a1185f85a6a6972446e72a86d50ca0e3b3ffe217d0c2fea30473db",
+			"hash":"31f49b23f8a1185f85a6a6972446e72a86d50ca0e3b3ffe217d0c2fea30473db",
+			"blockhash":"322bad477efb4b33fa4b1f0b2861eaf543c61068da9898a95062fdb02ada486f",
+			"version":2,
+			"locktime":0,
+			"size":168,
+			"vsize":168,
+			"time":1485785935,
+			"blocktime":1485785935,
+			"vin":[
+				{
+					"prev_out":{
+						"hash":"0000000000000000000000000000000000000000000000000000000000000000",
+						"n":4294967295
+					},
+					"coinbase":"04ffff001d0104404e592054696d65732030352f4f63742f32303131205374657665204a6f62732c204170706c65e280997320566973696f6e6172792c2044696573206174203536"
 				}
-			}
-		]
+			],
+			"vout":[
+				{
+					"value":"50.00000000",
+					"n":0,
+					"scriptPubKey":{
+						"hex":"040184710fa689ad5023690c80f3a49c8f13f8d45b8c857fbcbc8bc4a8e4d3eb4b10f4d4604fa08dce601aaf0f470216fe1b51850b4acf21b179c45070ac7b03a9 OP_CHECKSIG",
+						"type":"pubkey",
+						"reqSigs":1,
+						"addresses":[
+							"Ler4HNAEfwYhBmGXcFP2Po1NpRUEiK8km2"
+						]
+					}
+				}
+			]
+		}
 	},
 	historicalData: [
 	],
