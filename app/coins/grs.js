@@ -113,10 +113,9 @@ module.exports = {
 			// Subsidy is reduced by 6% every 10080 blocks, which will occur approximately every 1 week
 			var exponent = Math.floor((blockHeight / 10080));
 			for (var i = 0; i < exponent; i++){
-					nSubsidy = nSubsidy.times(47);
-		    	nSubsidy = nSubsidy.dividedBy(50);
+					nSubsidy = nSubsidy.times(47).dividedBy(50);
 			}
-			if (nSubsidy < minimumSubsidy) {
+			if (nSubsidy.lte(minimumSubsidy)) {
 				nSubsidy = minimumSubsidy;
 			}
 			return nSubsidy;
@@ -127,10 +126,9 @@ module.exports = {
 			// Subsidy is reduced by 10% every day (1440 blocks)
 			var exponent = Math.floor(((blockHeight - 120000) / 1440));
 			for (var i = 0; i < exponent; i++){
-					nSubsidy = nSubsidy.times(45);
-		    	nSubsidy = nSubsidy.dividedBy(50);
+					nSubsidy = nSubsidy.times(45).dividedBy(50);
 			}
-			if (nSubsidy < minimumSubsidy) {
+			if (nSubsidy.lte(minimumSubsidy)) {
 				nSubsidy = minimumSubsidy;
 			}
 			return nSubsidy;
@@ -141,10 +139,9 @@ module.exports = {
 			// Subsidy is reduced by 1% every week (10080 blocks)
 			var exponent = Math.floor(((blockHeight - 150000) / 10080));
 			for (var i = 0; i < exponent; i++){
-					nSubsidy = nSubsidy.times(99);
-		    	nSubsidy = nSubsidy.dividedBy(100);
+					nSubsidy = nSubsidy.times(99).dividedBy(100);
 			}
-			if (nSubsidy < minimumSubsidy) {
+			if (nSubsidy.lte(minimumSubsidy)) {
 				nSubsidy = minimumSubsidy;
 			}
 			return nSubsidy;
