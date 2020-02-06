@@ -105,21 +105,21 @@ block content
 								div(class="col-md-6")
 
 									if (addressObj) 
-									  if (addressObj.hash)
-								  		div(class="row")
-								  			div(class="summary-split-table-label") Hash 160
-								  			div(class="summary-split-table-content monospace") #{addressObj.hash.toString("hex")}
+										if (addressObj.hash)
+											div(class="row")
+												div(class="summary-split-table-label") Hash 160
+												div(class="summary-split-table-content monospace") #{addressObj.hash.toString("hex")}
 
 									if (result.validateaddress.scriptPubKey)
 										div(class="row")
 											div(class="summary-split-table-label") Script Public Key
 											div(class="summary-split-table-content monospace") #{result.validateaddress.scriptPubKey}
 
-                  if (addressObj)
-  									if (addressObj.hasOwnProperty("version"))
-	  									div(class="row")
-		  									div(class="summary-split-table-label") Version
-			  								div(class="summary-split-table-content monospace") #{addressObj.version}
+									if (addressObj)
+										if (addressObj.hasOwnProperty("version"))
+											div(class="row")
+												div(class="summary-split-table-label") Version
+												div(class="summary-split-table-content monospace") #{addressObj.version}
 
 									if (result.validateaddress.hasOwnProperty("witness_version"))
 										div(class="row")
