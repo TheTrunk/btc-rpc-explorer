@@ -5,7 +5,7 @@ var grs = require("./coins/grs.js");
 var doge = require("./coins/doge.js");
 var dgb = require("./coins/dgb.js");
 var sin = require("./coins/sin.js");
-var sin = require("./coins/bth.js");
+var bth = require("./coins/bth.js");
 
 module.exports = {
 	"BTC": btc,
