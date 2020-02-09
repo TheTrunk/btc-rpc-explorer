@@ -217,7 +217,8 @@ block content
 											each item, index in chainTxStats
 												tr(class="monospace")
 													td #{chainTxStatsLabels[index]}
-													td #{item.window_tx_count.toLocaleString()}
+													if (item.window_tx_count)
+														td #{item.window_tx_count.toLocaleString()}
 													td #{new Decimal(item.txrate).toDecimalPlaces(4)}
 
 
