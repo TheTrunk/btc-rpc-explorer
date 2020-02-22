@@ -6,6 +6,7 @@ var doge = require("./coins/doge.js");
 var dgb = require("./coins/dgb.js");
 var sin = require("./coins/sin.js");
 var bth = require("./coins/bth.js");
+var genx = require("./coins/genx.js");
 
 module.exports = {
 	"BTC": btc,
@@ -16,6 +17,7 @@ module.exports = {
 	"DGB": dgb,
 	"SIN": sin,
 	"BTH": bth,
+	"GENX": genx,
 
-	"coins":["BTC", "LTC", "BZX", "GRS", "DOGE", "DGB", "SIN", "BTH"]
+	"coins":["BTC", "LTC", "BZX", "GRS", "DOGE", "DGB", "SIN", "BTH", "GENX"]
 };
