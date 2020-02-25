@@ -108,13 +108,14 @@ module.exports = {
 		}
 	},
 	blockRewardFunction:function(blockHeight) {
+		// TODO https://github.com/digibyte/digibyte/blob/master/src/validation.cpp#L1173
 		var eras = [ new Decimal8(8000) ];
-		for (var i = 1; i < 34; i++) {
+		for (var i = 1; i < 64; i++) {
 			var previous = eras[i - 1];
 			eras.push(new Decimal8(previous).dividedBy(2));
 		}
 
-		var index = Math.floor(blockHeight / 100000);
+		var index = Math.floor(blockHeight / 210000);
 
 		return eras[index];
 	}
